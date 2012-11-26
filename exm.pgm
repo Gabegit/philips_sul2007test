@@ -1,0 +1,337 @@
+
+@ ==========================================================================@
+@ Example Gauss Code for Clustering Algorithm                               @ 
+@              in Transition Modelling and Convergence Test                 @
+@             by Peter C.B. Phillips and Donggyu Sul (2007)                 @ 
+@  This version: January 18 2008.                                           @
+@  Programmed by Donggyu Sul                                                @
+@  More Reference:                                                          @
+@ Economic Transition and Growth: by Phillips and Sul (2007)                @
+@ Some Empirics on Economic Growth under Heterogeneous Technology (2007)    @
+@  by Phillips and Sul (2007), Journal of Macroeconomics                    @
+@ ==========================================================================@
+@ Special thanks go to Ekaterini Panopoulou for testing this Gauss code.    @
+
+new;
+cls;
+format /m1 /rd 8,3;
+outwidth 240;
+@YR NYC PHI BOS CLE CHI DET WDC BAL HOU LAX SF0 SEA POR CIN ATL PIT STL MIN KCM  @
+@    1   2   3   4   5   6   7  8    9   10  11  12  13  14  15  16  17  18  19  @
+
+n = 19;
+t = 41;
+load xv[42,160] = penn_gdp_per7010.txt;     @ Data file: 84 x 20 matrix            @
+x = xv[2:42,2:160];                @ first column = year, so eliminate it @
+x = x./x[1,.];                 @ normalized by the initial year       @
+x = x.*100;                    @ change it into percentage            @
+
+@ =========== Define city name ==================@
+iname = {"AFG","AGO","ALB","ARG","ATG","AUS","AUT","BDI","BEL","BEN","BFA",
+       "BGD","BGR","BHR","BHS","BLZ","BMU","BOL","BRA","BRB","BRN","BTN",
+       "BWA","CAF","CAN","CH2","CHE","CHL","CHN","CIV","CMR","COG","COL",
+       "COM","CPV","CRI","CUB","CYP","DJI","DMA","DNK","DOM","DZA","ECU",
+       "EGY","ESP","ETH","FIN","FJI","FRA","FSM","GAB","GBR","GER","GHA",
+       "GIN","GMB","GNB","GNQ","GRC","GRD","GTM","GUY","HKG","HND","HTI",
+       "HUN","IDN","IND","IRL","IRN","IRQ","ISL","ISR","ITA","JAM","JOR",
+       "JPN","KEN","KHM","KIR","KNA","KOR","LAO","LBN","LBR","LCA","LKA",
+       "LSO","LUX","MAC","MAR","MDG","MDV","MEX","MHL","MLI","MLT","MNG",
+       "MOZ","MRT","MUS","MWI","MYS","NAM","NER","NGA","NIC","NLD","NOR",
+       "NPL","NZL","OMN","PAK","PAN","PER","PHL","PLW","PNG","POL","PRI",
+       "PRT","PRY","ROM","RWA","SDN","SEN","SGP","SLB","SLE","SLV","SOM",
+       "STP","SUR","SWE","SWZ","SYC","SYR","TCD","TGO","THA","TON","TTO",
+       "TUN","TUR","TWN","TZA","UGA","URY","USA","VCT","VEN","VNM","VUT",
+       "WSM","ZAF","ZAR","ZMB","ZWE"};
+
+Z = ln(x);
+zz = z;
+
+i = 1;
+do while i <= 159;
+ {gy,cy} = HPMat2(z[.,i],400); @ Hodrick Prescott Filter @
+ zz[.,i]= gy;
+i = i + 1;
+endo;
+
+@ Note that if you don't want to use HP filtered data, delete the above 6 lines @
+
+zz = zz[10:t,.]; @To avoid the base year effect in our own calculations, we discard the first 42 annual observations. @
+kq = 12;         @ r-value: Usually set kq = int(rows(zz)/3) @
+
+output file = example.out reset; output on;
+{cc} = allsort(zz,0,kq,iname);
+output off;
+
+
+
+
+
+
+
+@===================== DO NOT ALTER BELOW ===========================@
+
+
+
+
+proc allsort(yh,crit,kq,iname);
+local in1,in2,in3,b1,t1,nine,restg,yh2,inn1,inn2,inn3,ic1;
+
+{in1,in2,in3} = sorthat(yh,crit,kq);
+{b1,t1} = logts(yh[.,in2],kq);
+" Sub Club Convergence ===================";
+"        b-coef   t-stat";
+format /m1 /rd 8,3;
+"const";;b1[2]~t1[2];
+"logt ";;b1[1]~t1[1];
+format /m1 /rd 8,0;
+" First convergence club";;in2;$iname[in2]';
+@================================================@
+{b1,t1} = logts(yh[.,in3],kq);
+" Check if the rest group forms the other convergent club";
+"        b-coef   t-stat";
+format /m1 /rd 8,3;
+"const";;b1[2]~t1[2];
+"logt ";;b1[1]~t1[1];
+format /m1 /rd 8,0;
+if t1[1] > -1.65;
+"Since t-stat > -1.65, the rest forms a convergent club "; 
+in3;$iname[in3]';
+goto final; endif;
+"Since t-stat < -1.65, repeat clustering procedures";
+nine = in3;
+
+ic1 = 2;
+dasi:
+"=========================================================";
+restg = yh[.,nine];
+yh2 = restg;
+{inn1,inn2,inn3} = sorthat(yh2,crit,kq);
+{b1,t1} = logts(yh[.,nine[inn2]],kq);
+
+ic1;;"converent club test";
+"        b-coef   t-stat";
+format /m1 /rd 8,3;
+"const";;b1[2]~t1[2];
+"logt ";;b1[1]~t1[1];
+format /m1 /rd 8,0;
+ic1;;"club";nine[inn2];$iname[nine[inn2]]';
+
+{b1,t1} = logts(yh[.,nine[inn3]],kq);
+" Check if the rest group forms the other convergent club";
+"        b-coef   t-stat";
+format /m1 /rd 8,3;
+"const";;b1[2]~t1[2];
+"logt ";;b1[1]~t1[1];
+format /m1 /rd 8,0;
+if t1[1] > -1.65;
+"Since t-stat > -1.65, the rest forms a convergent club "; 
+nine[inn3];$iname[nine[inn3]]';
+goto final; endif;
+"Since t-stat < -1.65, repeat clustering procedures";
+nine = nine[inn3]; ic1 = ic1 + 1;
+goto dasi;
+
+final:
+retp(b1);
+endp;
+
+
+proc (3) = sorthat(yh,ccc,kq);
+local b1,t1,t,n,kk,kin,yhh,tt1,ik1,ww,bb1,i,kk1,core,corein1,ccin,ccore,corein2,cin3,ii;
+t = rows(yh);
+{b1,t1} = logts(yh,kq);
+
+t = rows(yh);
+n = cols(yh);
+ kk = yh[t,.]'~seqa(1,1,n);
+ kk = rev(sortc(kk,1));
+ kin = kk[.,2]';
+ yhh = yh[.,kin];  
+ tt1 = zeros(3,1);
+
+@ ========= finding initial ================ @
+ ik1 = 1;
+dasi1:
+  ww = yhh[.,ik1:ik1+1];
+  {b1,t1} = logts(ww,kq);
+if t1[1] < -1.65; ik1 = ik1 + 1; goto dasi1; endif;
+
+@================@;
+ tt1 = zeros(n,1);
+ bb1 = zeros(n,1);
+
+ i = ik1+1;
+ do while i <= 10;
+  ww = yhh[.,ik1:i];
+  {b1,t1} = logts(ww,kq);
+  if t1[1] < -1.65; goto busuna; endif;
+  tt1[i]=t1[1];
+  bb1[i]=b1[1];
+ i = i + 1;
+ endo;
+busuna:
+kk1 =  maxindc(abs(tt1)); 
+core = yhh[.,ik1:kk1];
+  {b1,t1} = logts(core,kq);
+corein1 = kin[ik1:kk1];
+@ ========== construct a complement set of core group =========@
+ if ik1 == 1; 
+  ccore = yhh[.,kk1+1:cols(yhh)];
+  ccin  = kin[kk1+1:cols(yhh)];
+ endif;
+ if ik1 > 1;
+  ccore = yhh[.,1:ik1-1]~yhh[.,kk1+1:cols(yhh)];
+  ccin  = kin[1:ik1-1]~kin[kk1+1:cols(yhh)];
+ endif;
+ corein2 = corein1;
+local yw;
+
+ i = 1;
+ do while i<= cols(ccore);
+   ww = core~ccore[.,i];
+  {b1,t1} = logts(ww,kq);
+  tt1[i]=t1[1];
+  bb1[i]=b1[1];
+ if t1[1] > ccc;@ ccin[i]~b1[1]~t1[1];@ corein2 = corein2~ccin[i];
+ endif;
+ i = i + 1;
+ endo; 
+ corein2 = sortc(corein2',1);
+
+ cin3 = {};
+ ii = 1;
+ i = 1;
+ do while i <= n;
+  if i ne corein2[ii]; cin3 = cin3~i; endif;
+  if i == corein2[ii]; ii = ii + 1; ii = minc(ii|rows(corein2)); endif;
+ i = i + 1;
+ endo;
+  
+retp(corein1,corein2',cin3);
+endp; 
+
+proc (1) = andrs(x);
+local t,n,x1,y1,b1,ee,a1,a2,band1,band2,jb2,jband2,kern1;
+local lam, jam,j,i,sigm,ttp,ttp1,ttp2,tt;
+
+  t  = rows(x);
+  n  = cols(x);
+  x1 = x[1:t-1,.];
+  y1 = x[2:t,.];
+  b1 = sumc(x1.*y1)./sumc(x1.*x1);
+  ee = y1 - x1.*b1';
+
+  a1 = 4.*(b1.^2)./(((1-b1).^2).*((1+b1).^2));
+  a2 = 4.*(b1.^2)./((1-b1).^4);
+
+  band1 = 1.1447.*( (a1.*t).^(1/3));
+  band2 = 1.3221.*((a2.*t).^(1/5));
+
+  jb2   = seqa(1,1,t-1)./band2';
+
+  jband2 = jb2.*(1.2*pi);
+   kern1 = (  ( sin(jband2)./jband2 - cos(jband2) )./( (jb2.*pi).^2.*12 ) ).*25;
+  lam = zeros(n,n);
+  jam = zeros(n,n);
+  tt = rows(ee);
+
+  j = 1;
+  do while j <= tt-1;
+     ttp1 = (x[1:tt-j,.]'x[1+j:tt,.]).*kern1[j,.]./tt;
+     ttp  = (x[1:tt-j,.]'x[1+j:tt,.])'.*kern1[j,.]./tt;
+     lam = lam + ttp + ttp1;
+  j = j + 1;
+  endo;
+
+    sigm = x'x./tt;
+    lam = sigm + lam;
+retp(lam);
+endp;
+
+proc (2) = HPMat2( y,lambda );
+
+  local N,gk,K,A,bandA,CholA,gy,cy;
+
+
+  N = rows(y);
+
+  if N < 5;                        @ /*pattern of A different if N < 5*/@
+    retp( error(0),error(0) );
+  endif;
+
+  gk = 1|(-2)|1|zeros(2,1);      @ /*prototype 5x5 K matrix*/@
+  K = upmat(toeplitz(gk));
+  K = trimr(k,0,2);
+
+  A = eye(5)+lambda*k'*k;       @  /*prototype 5x5 A matrix*/@
+  bandA = band(A,2);           @ /*band from A, extending to TxT matrix*/@
+  bandA = bandA[1:2,.] | (ones(N-4,1).*bandA[3,.]) | bandA[4:5,.];
+
+  CholA = bandchol( bandA ); @   /*Cholesky decomp of band representation*/@
+
+  gy = bandcholsol( y,CholA );     @ /*solving for "trend" component*/@
+  cy = y - gy;                     @ /*"cyclical" component*/@
+  retp( gy,cy );
+endp;
+
+proc phil(y,k);
+local p,q,i,b,re,ss,t;
+t = rows(y);
+
+p = seqa(1,1,t)./(t);
+
+q = zeros(t,k);
+
+i = 1;
+do while i <= k;
+q[.,i] = sin((i - 0.5).*pi.*p);
+q[.,i] = q[.,i].*sqrt(2);
+i = i + 1;
+endo;
+q = q~ones(rows(q),1);
+ss = y;
+b = invpd(q'q)*q'ss;
+re = q*b;
+retp(re);
+endp;
+
+
+proc nwest(x,inlag);
+local n,xom,xomm,i1,temp11,temp12;
+n = rows(x);
+   xom= x'x./n;
+   xomm = xom;
+    i1 = 1;
+     do while i1 <= inlag;
+      temp11 = x[1+i1:n-1,.]'x[1:n-1-i1,.].*(1-(i1/(inlag+1)))./n;
+      temp12 = (x[1+i1:n-1,.]'x[1:n-1-i1,.])'.*(1-(i1/(inlag+1)))./n;
+      xomm = xomm+temp11 + temp12;
+     i1 = i1 + 1;
+    endo;
+retp(xomm);
+endp;
+
+proc (2) = logts(hht,p);@the regession equation@
+local rht,trd,xx,b,re,lhht,t;
+ t = rows(hht);
+ hht = hht./meanc(hht');@h_it@
+ hht = (hht - 1).*(hht-1);
+ hht = meanc(hht');@H_t@
+ lhht = hht[1]./hht; @H_1/H_t@
+ lhht = ln(lhht);@log(H_1/H_t)@
+ rht = lhht[p+1:t];@p=rT-1@
+ trd = ln(seqa(1,1,t));@L(t)=log(t)@
+ trd = trd[p+1:t];
+ rht = rht - 2*ln(trd);@the left side of the regession equation@
+
+ xx = trd~ones(rows(trd),1);
+ b = invpd(xx'xx)*xx'rht;
+ re = rht - xx*b;
+ re = re - meanc(re);
+ re = andrs(re);
+ re = diag(invpd(xx'xx)).*re;
+ re = sqrt(re);
+ re = b./re;
+retp(b,re);
+endp;
+
