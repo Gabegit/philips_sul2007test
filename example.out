@@ -1,0 +1,107 @@
+ Sub Club Convergence ===================
+        b-coef   t-stat
+const  -2.445   -1.928 
+logt    0.014    0.033 
+ First convergence club      23       29       59       83      146 
+     BWA      CHN      GNQ      KOR      TWN 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const  -0.016   -0.145 
+logt   -1.268  -34.513 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
+       2 converent club test
+        b-coef   t-stat
+const  -3.495   -7.976 
+logt    0.622    4.387 
+       2 club
+      26       61       82       91       94       98      104      128      153 
+     CH2      GRD      KNA      MAC      MDV      MLT      MYS      SGP      VNM 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const  -0.087   -0.719 
+logt   -1.225  -31.211 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
+       3 converent club test
+        b-coef   t-stat
+const  -4.203  -11.443 
+logt    0.407    3.424 
+       3 club
+       2        3       22       28       35       42       45       64       68       69       70       80       84       88       90      100      102      120      141      143      151 
+     AGO      ALB      BTN      CHL      CPV      DOM      EGY      HKG      IDN      IND      IRL      KHM      LAO      LKA      LUX      MOZ      MUS      POL      THA      TTO      VCT 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const  -0.316   -2.413 
+logt   -1.137  -26.810 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
+       4 converent club test
+        b-coef   t-stat
+const  -3.042  -13.116 
+logt    0.081    1.077 
+       4 club
+       5        6        7       12       13       16       37       38       40       46       48       53       60       63       87       89       92      110      113      115      121      122      124      126      137      139 
+     144      145      147      148 
+     ATG      AUS      AUT      BGD      BGR      BLZ      CUB      CYP      DMA      ESP      FIN      GBR      GRC      GUY      LCA      LSO      MAR      NOR      OMN      PAN      PRI      PRT      ROM      SDN      SYC      TCD 
+     TUN      TUR      TZA      UGA 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const  -0.365   -2.376 
+logt   -1.125  -22.618 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
+       5 converent club test
+        b-coef   t-stat
+const  -3.473  -12.582 
+logt    0.142    1.591 
+       5 club
+       4        9       11       17       18       19       25       33       36       41       43       44       47       49       50       51       54       55       62       67       71       72       73       74       75       77 
+      78       85       95       97       99      105      107      109      111      112      114      116      117      123      125      131      135      136      138      142      149      150      154      155      156      158 
+     ARG      BEL      BFA      BMU      BOL      BRA      CAN      COL      CRI      DNK      DZA      ECU      ETH      FJI      FRA      FSM      GER      GHA      GTM      HUN      IRN      IRQ      ISL      ISR      ITA      JOR 
+     JPN      LBN      MEX      MLI      MNG      NAM      NGA      NLD      NPL      NZL      PAK      PER      PHL      PRY      RWA      SLV      SWE      SWZ      SYR      TON      URY      USA      VUT      WSM      ZAF      ZMB 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const  -0.569   -2.513 
+logt   -1.094  -14.923 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
+       6 converent club test
+        b-coef   t-stat
+const  -2.569  -15.302 
+logt    0.098    1.803 
+       6 club
+      10       14       15       20       27       31       32       56       65       76       79       96      101      103      118      119      127      129      133      134      152 
+     BEN      BHR      BHS      BRB      CHE      CMR      COG      GIN      HND      JAM      KEN      MHL      MRT      MWI      PLW      PNG      SEN      SLB      STP      SUR      VEN 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const  -1.914   -5.554 
+logt   -0.654   -5.862 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
+       7 converent club test
+        b-coef   t-stat
+const  -4.761   -8.920 
+logt    0.459    2.655 
+       7 club
+       1       21       30       52       57       66       81      108      130      159 
+     AFG      BRN      CIV      GAB      GMB      HTI      KIR      NIC      SLE      ZWE 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const  -3.261   -7.037 
+logt   -0.409   -2.724 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
+       8 converent club test
+        b-coef   t-stat
+const  -5.096   -8.665 
+logt    0.302    1.585 
+       8 club
+       8       24       34       39       58       86       93      106      132      140 
+     BDI      CAF      COM      DJI      GNB      LBR      MDG      NER      SOM      TGO 
+ Check if the rest group forms the other convergent club
+        b-coef   t-stat
+const       .        . 
+logt        .        . 
+Since t-stat < -1.65, repeat clustering procedures
+=========================================================
